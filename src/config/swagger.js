@@ -10,7 +10,12 @@ const options = {
     },
     servers: [
       {
+        url: "https://segundo-proyecto-backend.onrender.com",
+        description: "Producción (Render)",
+      },
+      {
         url: "http://localhost:3000",
+        description: "Local",
       },
     ],
     components: {
