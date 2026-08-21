@@ -1,6 +1,5 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
@@ -11,7 +10,6 @@ generator client {
 datasource db {
   provider  = "postgresql"
 }
-
 
 model User {
   id        String   @id @default(uuid())
@@ -24,17 +22,17 @@ model User {
 }
 
 model Product {
-  id          String   @id @default(uuid())
+  id          String     @id @default(uuid())
   name        String
   description String?
   price       Float
-  stock       Int      @default(0)
+  stock       Int        @default(0)
   category    String?
   imageUrl    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  cartItems   CartItem[]
 }
-
 
 model Cart {
   id        String     @id @default(uuid())
@@ -44,15 +42,14 @@ model Cart {
   updatedAt DateTime   @updatedAt
 }
 
-
 model CartItem {
   id        String   @id @default(uuid())
   cartId    String
   cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
   productId String
+  product   Product  @relation(fields: [productId], references: [id])
   quantity  Int      @default(1)
   createdAt DateTime @default(now())
-
   @@unique([cartId, productId])
 }
 

@@ -22,7 +22,10 @@ const getOrCreateCart = async (userId) => {
 
 export const getCart = async (userId) => {
   const cart = await getOrCreateCart(userId);
-  return prisma.cartItem.findMany({ where: { cartId: cart.id } });
+  return prisma.cartItem.findMany({
+    where: { cartId: cart.id },
+    include: { product: true },
+  });
 };
 
 export const addItemToCart = async (userId, productId, quantity = 1) => {
@@ -36,11 +39,13 @@ export const addItemToCart = async (userId, productId, quantity = 1) => {
     return prisma.cartItem.update({
       where: { id: existingItem.id },
       data: { quantity: existingItem.quantity + quantity },
+      include: { product: true },
     });
   }
 
   return prisma.cartItem.create({
     data: { cartId: cart.id, productId, quantity },
+    include: { product: true },
   });
 };
 
@@ -57,6 +62,7 @@ export const updateCartItem = async (userId, productId, quantity) => {
   return prisma.cartItem.update({
     where: { id: item.id },
     data: { quantity },
+    include: { product: true },
   });
 };
 
