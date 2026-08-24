@@ -13,8 +13,8 @@ const router = Router();
 
 router.get("/", getProducts);
 router.get("/:id", getProduct);
-router.post("/", verifyToken, requireRole("admin"), upload.single("image"), postProduct);
-router.put("/:id", verifyToken, requireRole("admin"), upload.single("image"), putProduct);
-router.delete("/:id", verifyToken, requireRole("admin"), removeProduct);
+router.post("/", verifyToken, requireRole("ADMIN"), upload.single("image"), postProduct);
+router.put("/:id", verifyToken, requireRole("ADMIN"), upload.single("image"), putProduct);
+router.delete("/:id", verifyToken, requireRole("ADMIN"), removeProduct);
 
 export default router;
