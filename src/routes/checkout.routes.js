@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { postCheckout, getOrders } from "../controllers/checkout.controller.js";
+import { postCheckout, getOrders, createStripeSession } from "../controllers/checkout.controller.js";
 import { verifyToken } from "../middlewares/auth.middleware.js";
 
 const router = Router();
@@ -31,5 +31,19 @@ router.post("/", verifyToken, postCheckout);
  *         description: Lista de pedidos
  */
 router.get("/orders", verifyToken, getOrders);
+
+/**
+ * @swagger
+ * /api/checkout/session:
+ *   post:
+ *     summary: Crear una sesión de pago con Stripe a partir del carrito
+ *     tags: [Checkout]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: URL de la sesión de pago de Stripe
+ */
+router.post("/session", verifyToken, createStripeSession);
 
 export default router;
