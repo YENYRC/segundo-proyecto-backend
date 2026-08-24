@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { register, login } from "../controllers/auth.controller.js";
+import { register, login, logout, me } from "../controllers/auth.controller.js";
+import { verifyToken } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 
@@ -47,8 +48,34 @@ router.post("/register", register);
  *                 type: string
  *     responses:
  *       200:
- *         description: Login exitoso
+ *         description: Login exitoso, establece cookie httpOnly con el token
  */
 router.post("/login", login);
+
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   post:
+ *     summary: Cerrar sesión
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Sesión cerrada, cookie eliminada
+ */
+router.post("/logout", logout);
+
+/**
+ * @swagger
+ * /api/auth/me:
+ *   get:
+ *     summary: Obtener el usuario autenticado actualmente
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Datos del usuario logueado
+ *       401:
+ *         description: No autenticado
+ */
+router.get("/me", verifyToken, me);
 
 export default router;
