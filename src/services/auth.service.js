@@ -59,3 +59,25 @@ export const getUserById = async (id) => {
   const { password: _, ...userWithoutPassword } = user;
   return userWithoutPassword;
 };
+
+export const updateUser = async (id, { name, email }) => {
+  if (email) {
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser && existingUser.id !== id) {
+      const error = new Error("El email ya está en uso por otro usuario");
+      error.statusCode = 400;
+      throw error;
+    }
+  }
+
+  const user = await prisma.user.update({
+    where: { id },
+    data: {
+      ...(name && { name }),
+      ...(email && { email }),
+    },
+  });
+
+  const { password: _, ...userWithoutPassword } = user;
+  return userWithoutPassword;
+};

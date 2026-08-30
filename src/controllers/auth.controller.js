@@ -1,4 +1,4 @@
-import { registerUser, loginUser, getUserById } from "../services/auth.service.js";
+import { registerUser, loginUser, getUserById, updateUser } from "../services/auth.service.js";
 
 export const register = async (req, res, next) => {
   try {
@@ -50,6 +50,21 @@ export const logout = async (req, res, next) => {
 export const me = async (req, res, next) => {
   try {
     const user = await getUserById(req.user.id);
+    res.status(200).json({ success: true, data: { user } });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateProfile = async (req, res, next) => {
+  try {
+    const { name, email } = req.body;
+    if (!name && !email) {
+      const error = new Error("Debes enviar al menos un campo para actualizar");
+      error.statusCode = 400;
+      throw error;
+    }
+    const user = await updateUser(req.user.id, { name, email });
     res.status(200).json({ success: true, data: { user } });
   } catch (error) {
     next(error);

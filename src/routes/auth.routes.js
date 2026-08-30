@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { register, login, logout, me } from "../controllers/auth.controller.js";
+import { register, login, logout, me, updateProfile } from "../controllers/auth.controller.js";
 import { verifyToken } from "../middlewares/auth.middleware.js";
 
 const router = Router();
@@ -77,5 +77,19 @@ router.post("/logout", logout);
  *         description: No autenticado
  */
 router.get("/me", verifyToken, me);
+
+/**
+ * @swagger
+ * /api/auth/me:
+ *   put:
+ *     summary: Actualizar datos del usuario autenticado
+ *     tags: [Auth]
+ *     responses:
+ *       200:
+ *         description: Perfil actualizado correctamente
+ *       401:
+ *         description: No autenticado
+ */
+router.put("/me", verifyToken, updateProfile);
 
 export default router;
