@@ -1,5 +1,7 @@
 import { registerUser, loginUser, getUserById, updateUser } from "../services/auth.service.js";
 
+const isProduction = process.env.NODE_ENV === "production";
+
 export const register = async (req, res, next) => {
   try {
     const { email, password, name } = req.body;
@@ -27,8 +29,8 @@ export const login = async (req, res, next) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -40,7 +42,11 @@ export const login = async (req, res, next) => {
 
 export const logout = async (req, res, next) => {
   try {
-    res.clearCookie("token");
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+    });
     res.status(200).json({ success: true, message: "Sesión cerrada correctamente" });
   } catch (error) {
     next(error);
